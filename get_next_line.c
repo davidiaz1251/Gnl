@@ -6,23 +6,23 @@
 /*   By: ldiaz-ra <ldiaz-ra@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 21:37:34 by ldiaz-ra          #+#    #+#             */
-/*   Updated: 2023/10/26 12:09:24 by ldiaz-ra         ###   ########.fr       */
+/*   Updated: 2023/10/27 11:09:45 by ldiaz-ra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_free(char *buffer, char *buf)
+static char	*ft_free(char *buffer, char *buff_aux)
 {
 	char	*temp;
 
-	temp = ft_strjoin(buffer, buf);
+	temp = ft_strjoin(buffer, buff_aux);
 	free(buffer);
 	buffer = NULL;
 	return (temp);
 }
 
-char	*ft_next(char *buffer)
+static char	*ft_next(char *buffer)
 {
 	int		i;
 	int		j;
@@ -47,7 +47,7 @@ char	*ft_next(char *buffer)
 	return (line);
 }
 
-char	*ft_line(char *buffer)
+static char	*ft_line(char *buffer)
 {
 	char	*line;
 	int		i;
@@ -69,32 +69,32 @@ char	*ft_line(char *buffer)
 	return (line);
 }
 
-char	*read_file(int fd, char *res)
+static char	*read_file(int fd, char *buffer)
 {
-	char	*buffer;
+	char	*buff_aux;
 	int		byte_read;
 
-	if (!res)
-		res = ft_calloc(1, 1);
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!buffer)
+		buffer = ft_calloc(1, 1);
+	buff_aux = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	byte_read = 1;
 	while (byte_read > 0)
 	{
-		byte_read = read(fd, buffer, BUFFER_SIZE);
+		byte_read = read(fd, buff_aux, BUFFER_SIZE);
 		if (byte_read == -1)
 		{
-			free(buffer);
-			buffer = NULL;
+			free(buff_aux);
+			buff_aux = NULL;
 			return (NULL);
 		}
-		buffer[byte_read] = '\0';
-		res = ft_free(res, buffer);
-		if (ft_strchr(buffer, '\n'))
+		buff_aux[byte_read] = '\0';
+		buffer = ft_free(buffer, buff_aux);
+		if (ft_strchr(buff_aux, '\n'))
 			break ;
 	}
-	free(buffer);
-	buffer = NULL;
-	return (res);
+	free(buff_aux);
+	buff_aux = NULL;
+	return (buffer);
 }
 
 char	*get_next_line(int fd)
@@ -103,7 +103,12 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	{
+		if (buffer)
+			free(buffer);
+		buffer = NULL;
 		return (NULL);
+	}
 	buffer = read_file(fd, buffer);
 	if (!buffer)
 		return (NULL);
