@@ -6,7 +6,7 @@
 /*   By: ldiaz-ra <ldiaz-ra@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 21:37:38 by ldiaz-ra          #+#    #+#             */
-/*   Updated: 2023/10/26 11:39:45 by ldiaz-ra         ###   ########.fr       */
+/*   Updated: 2023/11/25 19:32:27 by ldiaz-ra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <unistd.h>
 /************   BUFFER   ********/
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 130
+#  define BUFFER_SIZE 35
 # endif
 /************   PROTOTYPES   ********/
 char	*get_next_line(int fd);
